@@ -4,10 +4,9 @@ import Page from "../components/Page/Page";
 
 const Home: NextPage = () => {
   return (
-    <div className="text-emerald-600 text-8xl">
+    <Page>
       <Hero />
-      asdasd
-    </div>
+    </Page>
   );
 };
 
