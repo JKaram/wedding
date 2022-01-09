@@ -6,6 +6,7 @@ const Home: NextPage = () => {
   return (
     <Page>
       <Hero />
+      jkhkjh
     </Page>
   );
 };
