@@ -10,7 +10,7 @@ export default function Map() {
           lat: 45.316497933255754,
           lng: -76.04941079364546,
         }}
-        defaultZoom={11}
+        defaultZoom={15}
       />
     </div>
   );
