@@ -8,7 +8,7 @@ export default function Hero() {
       <div className="hidden">
         <Image src="/engament.jpg" layout="fill" objectFit="cover" alt="engament" />
       </div>
-      <div className="flex flex-col justify-between pb-2">
+      <div className="flex flex-col pb-2">
         <h2>
           Jamie <strong className="text-gem">&amp;</strong> Christina
         </h2>
