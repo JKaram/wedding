@@ -1,48 +1,91 @@
-import React from "react";
+import React, { HTMLInputTypeAttribute, useState } from "react";
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 import Button from "../commons/Button";
+import { dinnerOptions } from "../../constants";
 import styled from "styled-components";
+import { useValidationSchema } from "../../hooks/useValidationSchema";
 // Are They Coming?
 // Do you Have a plus one
 
-const RSVPSchema = Yup.object().shape({
-  name: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
-  email: Yup.string().email("Invalid email").required("Required"),
-});
-
 export default function Form1() {
+  const [secondGuest, setSecondGuest] = useState(false);
+  const schema = useValidationSchema(secondGuest);
+  console.log("🚀 ~ file: Form.tsx ~ line 13 ~ Form1 ~ schema", schema);
+
   return (
     <Formik
       initialValues={{
-        name: "",
-        email: "",
+        guestOneFoodOption: "",
+        guestTwoFoodOption: "",
+        message: "",
+        guestOneName: "",
+        guestTwoName: "",
+        song: "",
       }}
-      validationSchema={RSVPSchema}
+      validationSchema={schema}
       onSubmit={(values) => {
-        // same shape as initial values
-
         console.log(values);
       }}
     >
       {({ errors, touched }) => (
         <Form className="flex flex-col space-y-4 pt-2">
-          <div>
-            <label>Name</label>
-            <p>Description</p>
-            <StyledFeild name="name" />
-            {errors.name && touched.name ? <div>{errors.name}</div> : null}
+          <div className="md:flex">
+            <FormFeild
+              label={"Name(s)"}
+              description="Your name and name of your guest"
+              fieldName="guestOneName"
+              touched={touched.guestOneName}
+              error={errors.guestOneName}
+            />
+            <Field as="select" name="guestOneFoodOption">
+              <option value="">Please choose a meal</option>
+              {dinnerOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </Field>
           </div>
 
-          <div>
-            <label>Email</label>
-            <p>Description</p>
+          {!secondGuest && <div onClick={() => setSecondGuest(true)}>Add a guest</div>}
+
+          {secondGuest && (
             <div>
-              <StyledFeild name="email" type="email" />
-              {errors.email && touched.email ? <div>{errors.email}</div> : null}
+              <div className="md:flex">
+                <FormFeild
+                  label={"Name(s)"}
+                  description="Your name and name of your guest"
+                  fieldName="guestTwoName"
+                  touched={touched.guestTwoName}
+                  error={errors.guestTwoName}
+                />
+                <div onClick={() => setSecondGuest(false)}>Cancel Guest</div>
+                <Field as="select" name="guestTwoFoodOption">
+                  {dinnerOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </Field>
+              </div>
             </div>
-          </div>
-          <Button type="submit" onClick={() => alert("Hey")}>
+          )}
+
+          <FormFeild
+            label={"Message"}
+            description="Anything we should know?"
+            fieldName="message"
+            touched={touched.message}
+            error={errors.message}
+          />
+          <FormFeild
+            label={"Song"}
+            description="Any Song requests?"
+            fieldName="song"
+            touched={touched.song}
+            error={errors.song}
+          />
+          <Button type="submit" onClick={() => console.log("log")}>
             Submit
           </Button>
         </Form>
@@ -51,17 +94,34 @@ export default function Form1() {
   );
 }
 
-const FormInput = styled.div`
-  label {
-  }
-
-  .description {
-  }
-
-  .field {
-  }
-`;
-
-const StyledFeild = styled(Field)`
-  border: 1px solid black;
-`;
+const FormFeild = ({
+  fieldName,
+  description,
+  label,
+  touched,
+  error,
+  feildType,
+  initalValue,
+}: {
+  fieldName: string;
+  description: string;
+  label: string;
+  touched: boolean | undefined;
+  error: string | undefined;
+  feildType?: HTMLInputTypeAttribute;
+  initalValue?: undefined;
+}) => {
+  return (
+    <div className="flex flex-col">
+      <label className="font-medium">{label}</label>
+      <p className="text-gray-400 text-sm p-0">{description}</p>
+      <Field
+        className="border-slate-200 border px-1 py-1"
+        name={fieldName}
+        type={feildType}
+        initalValue={initalValue}
+      />
+      {error && touched ? <div className="text-red-600 text-sm">{error}</div> : null}
+    </div>
+  );
+};

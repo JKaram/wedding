@@ -11,6 +11,6 @@
   time,
   button,
   p {
-    @apply my-1 px-1;
+    @apply my-1;
   }
 }
